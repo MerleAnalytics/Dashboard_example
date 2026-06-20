@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wise Operations: 18-Month Global KYC Capacity Analytics Framework</title>
+    <style>
+        :root {
+            --bg-main: #ffffff;
+            --bg-card: #f8f9fa;
+            --text-main: #111111;
+            --text-muted: #5a626a;
+            --wise-green: #25513b; 
+            --wise-green-bright: #9ee770;
+            --wise-green-dim: rgba(158, 231, 112, 0.18);
+            --risk-red: #d90429;
+            --risk-red-dim: rgba(217, 4, 41, 0.12);
+            --border-color: #dee2e6;
+            --consolidated-bg: #f1f3f5;
+            
+            /* Sophisticated Soft Heatmap Palette */
+            --hm-green: rgba(43, 147, 72, 0.12);   /* Soft Green for >= 100% */
+            --hm-lime: rgba(163, 216, 96, 0.12);   /* Soft Lime Green for 90-99% */
+            --hm-yellow: rgba(255, 214, 10, 0.12); /* Soft Muted Yellow for 80-89% */
+            --hm-orange: rgba(247, 127, 0, 0.10);  /* Soft Amber for 60-79% */
+            --hm-red: rgba(217, 4, 41, 0.08);      /* Soft Red for < 60% */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 25px;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 1650px;
+            margin: 0 auto;
+        }
+
+        /* Freeze Pane / Sticky Control Header Wrapper */
+        .sticky-dashboard-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--text-main);
+            margin-bottom: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-top: 10px;
+            padding-bottom: 12px;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .tabs-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+        }
+
+        .tabs-left {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px 20px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--text-main);
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            background-color: var(--text-main);
+            color: #ffffff;
+            border-color: var(--text-main);
+        }
+
+        .active-context-pill {
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Executive Bulletin Area */
+        .executive-bulletin {
+            background-color: #f1f3f5;
+            border-left: 5px solid #6c757d;
+            padding: 18px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+            color: #333333;
+        }
+
+        .executive-bulletin h3 {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            letter-spacing: 0.3px;
+        }
+
+        .executive-bulletin ul {
+            margin-left: 20px;
+            line-height: 1.6;
+        }
+
+        .executive-bulletin li {
+            margin-bottom: 4px;
+        }
+
+        .controls-strip {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 11px;
+            margin-right: 8px;
+            text-transform: uppercase;
+            color: var(--text-main);
+        }
+
+        select {
+            background-color: #ffffff;
+            color: var(--text-main);
+            border: 1px solid #ced4da;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--text-main);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Horisontaalselt scrollitav konteiner tabelile */
+        .table-scroll-container {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .table-view {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: left;
+            min-width: 1600px; /* Tagab scrollitavuse ka suurematel ekraanidel */
+        }
+
+        .table-view th {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 12px 10px;
+            border-bottom: 2px solid var(--text-main);
+            background-color: #ffffff;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            transition: color 0.15s;
+        }
+
+        .table-view th:hover {
+            color: var(--text-main);
+        }
+
+        /* Küljele scrollimise ajal esimese veeru lukustamine (Sticky Freeze Pane) */
+        .table-view th.sticky-col,
+        .table-view td.sticky-col {
+            position: -webkit-sticky;
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            border-right: 2px solid var(--border-color);
+        }
+
+        .table-view th.sticky-col {
+            background-color: #f8f9fa;
+            z-index: 11;
+        }
+        
+        .table-view td.sticky-col {
+            background-color: #ffffff;
+        }
+
+        .table-view td {
+            padding: 10px 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        /* Trendide sektsioonide päiste värvid eristatavuse tagamiseks */
+        .trend-header-group {
+            background-color: #f1f3f5 !important;
+            text-align: center !important;
+            font-weight: 800;
+            border-bottom: 1px solid var(--border-color) !important;
+            font-size: 10px;
+        }
+
+        /* Pehmed soojuskaardi klassid (Soft Heatmap) */
+        .hm-cell-green { background-color: var(--hm-green) !important; font-weight: 700; }
+        .hm-cell-lime { background-color: var(--hm-lime) !important; font-weight: 700; }
+        .hm-cell-yellow { background-color: var(--hm-yellow) !important; font-weight: 700; }
+        .hm-cell-orange { background-color: var(--hm-orange) !important; font-weight: 700; }
+        .hm-cell-red { background-color: var(--hm-red) !important; font-weight: 700; }
+
+        .row-consolidated {
+            background-color: var(--consolidated-bg);
+            font-weight: 700;
+        }
+        .row-consolidated td {
+            border-bottom: 2px solid #adb5bd;
+            background-color: var(--consolidated-bg) !important;
+        }
+        .row-consolidated td.sticky-col {
+            background-color: var(--consolidated-bg) !important;
+        }
+
+        .row-clickable {
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+        .row-clickable:hover td {
+            background-color: #f1f3f5 !important;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-block;
+            text-align: center;
+            width: 85px;
+        }
+        .badge.critical { background-color: var(--risk-red-dim); color: var(--risk-red); }
+        .badge.optimal { background-color: var(--wise-green-dim); color: var(--wise-green); }
+        .badge.summary { background-color: #e2e3e5; color: #383d41; }
+
+        /* Charts Layout */
+        .charts-dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .chart-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 18px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 15px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .svg-chart-container {
+            width: 100%;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .svg-canvas {
+            width: 100%;
+            min-width: 1150px;
+            height: 240px;
+            display: block;
+        }
+
+        .axis-line {
+            stroke: var(--text-main);
+            stroke-width: 2;
+        }
+
+        .grid-line {
+            stroke: #e9ecef;
+            stroke-width: 1;
+            stroke-dasharray: 4,4;
+        }
+
+        .line-demand {
+            stroke: #6c757d;
+            stroke-width: 2.5;
+            fill: none;
+            stroke-dasharray: 6,4;
+        }
+
+        .line-capacity {
+            stroke: #2b9348;
+            stroke-width: 4;
+            fill: none;
+        }
+        .line-capacity.deficit {
+            stroke: var(--risk-red);
+        }
+
+        .chart-dot {
+            cursor: pointer;
+            transition: r 0.1s;
+        }
+        .chart-dot:hover {
+            r: 7;
+        }
+
+        .node-text {
+            font-size: 10px;
+            font-weight: 700;
+            fill: var(--text-main);
+        }
+        .node-text.pct-label {
+            fill: #111111;
+            font-weight: 800;
+        }
+
+        .axis-text {
+            font-size: 10px;
+            font-weight: 700;
+            fill: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="sticky-dashboard-header">
+            <header>
+                <div class="header-title">
+                    <h1>Wise Operations: 18-Month Global KYC Capacity Analytics Framework</h1>
+                    <p>Financial Planning &amp; Operations Strategy Matrix • Executive Horizon</p>
+                </div>
+                <div style="text-align: right; font-size: 11px; color: var(--text-muted);">
+                    System Mode: <span style="color:var(--text-main); font-weight:700;">Global Infrastructure Dashboard</span>
+                </div>
+            </header>
+
+            <div class="tabs-container">
+                <div class="tabs-left">
+                    <button class="tab-btn active" id="btn-tab1" onclick="switchTab('tab1')">1. Portfolio Executive Overview</button>
+                    <button class="tab-btn" id="btn-tab2" onclick="switchTab('tab2')">2. Regional &amp; Country Deep-Dive</button>
+                </div>
+                
+                <div class="active-context-pill">
+                    <span style="color: var(--text-muted); font-weight: normal;">Active Focus:</span>
+                    <span id="freeze-pane-target-label">Global Portfolio (All Markets Consolidated)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="executive-bulletin">
+            <h3>📈 STRATEGIC INVESTMENT ALIGNMENT ANALYSIS (CONTINUOUS CAPACITY REVIEW)</h3>
+            <ul>
+                <li><strong>GERMANY (EEA Cluster):</strong> Area requires structured strategic adjustment. Systemic compliance bottlenecks hold active volume execution coverage at 47%. Resource ramp up of <strong>+15 FTE</strong> is planned across the medium-term horizon to balance the structural capacity curve.</li>
+                <li><strong>BRAZIL (AMER Cluster):</strong> Instant-payment execution volume acceleration has outpaced legacy framework models. Structural strategy prioritizes transition to scalable automated infrastructure hooks over traditional manual processing squads.</li>
+                <li><strong>UNITED STATES (AMER Cluster):</strong> Rapid commercial pipeline scaling generates structural capacity compression (73% active coverage). Operational planning focuses on balanced permanent resource scaling combined with selective short-term contractor support.</li>
+                <li><strong>SINGAPORE (APAC Cluster) - SYSTEMIC BENCHMARK:</strong> High-automation operational blueprint. Full systemic verification API deployment successfully optimized unit run-rate costs down to a stable floor of <strong>&euro;0.35 per file</strong> with minimum resource footprint.</li>
+            </ul>
+        </div>
+
+        <div id="tab1" class="tab-content active">
+            <div class="card">
+                <div class="card-title">
+                    <span>Global Operations Summary &amp; Regional Aggregates (Reporting Benchmark: Month 18 Performance)</span>
+                </div>
+                <div class="table-scroll-container">
+                    <table class="table-view" id="macro-table" style="min-width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="sticky-col" onclick="sortTable('macro-table', 0, 'STR')">Geography / Portfolio Cluster</th>
+                                <th onclick="sortTable('macro-table', 1, 'NUM')">Demand Forecast (M18)</th>
+                                <th onclick="sortTable('macro-table', 2, 'NUM')">Filled Capacity (M18)</th>
+                                <th onclick="sortTable('macro-table', 3, 'PCT')">Coverage Ratio %</th>
+                                <th onclick="sortTable('macro-table', 4, 'NUM')">Active Resource (FTE)</th>
+                                <th onclick="sortTable('macro-table', 5, 'CUR')">Average Unit Cost</th>
+                                <th onclick="sortTable('macro-table', 6, 'STR')">Status Tier</th>
+                            </tr>
+                        </thead>
+                        <tbody id="macro-table-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab2" class="tab-content">
+            <div class="controls-strip">
+                <div class="filter-group">
+                    <label for="region-filter">Region Group:</label>
+                    <select id="region-filter" onchange="updateFilters('REGION', this.value)">
+                        <option value="ALL">All Regions Consolidated (9 Global Hubs)</option>
+                        <option value="EEA">EEA / Europe Portfolio</option>
+                        <option value="APAC">APAC Portfolio</option>
+                        <option value="AMER">Americas Portfolio</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="status-filter">Capacity State:</label>
+                    <select id="status-filter" onchange="updateFilters('STATUS', this.value)">
+                        <option value="ALL">All Operational Statuses</option>
+                        <option value="DEFICIT">Strategic Deficits Only (&lt;85% Capacity Coverage)</option>
+                        <option value="OPTIMAL">Stable / Optimal Only (&ge;85% Capacity Coverage)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group" style="margin-left: auto;">
+                    <label for="country-filter">Active Reporting Country:</label>
+                    <select id="country-filter" onchange="updateFilters('COUNTRY', this.value)">
+                        </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span>Granular Country Operations Matrix with 6-Month Trend Data Matrix (Scroll horizontally to review full history)</span>
+                </div>
+                
+                <div class="table-scroll-container">
+                    <table class="table-view" id="micro-table">
+                        <thead>
+                            <tr>
+                                <th class="sticky-col" rowspan="2" style="border-bottom: 2px solid var(--text-main);" onclick="sortTable('micro-table', 0, 'STR')">Country Market</th>
+                                <th rowspan="2" style="border-bottom: 2px solid var(--text-main);" onclick="sortTable('micro-table', 1, 'NUM')">Demand (k)</th>
+                                <th rowspan="2" style="border-bottom: 2px solid var(--text-main);" onclick="sortTable('micro-table', 2, 'NUM')">Capacity (k)</th>
+                                <th rowspan="2" style="border-bottom: 2px solid var(--text-main);" onclick="sortTable('micro-table', 3, 'PCT')">Coverage %</th>
+                                <th rowspan="2" style="border-bottom: 2px solid var(--text-main);" onclick="sortTable('micro-table', 4, 'NUM')">Active FTE</th>
+                                <th rowspan="2" style="border-bottom: 2px solid var(--text-main);" onclick="sortTable('micro-table', 5, 'CUR')">Unit Cost</th>
+                                <th rowspan="2" style="border-bottom: 2px solid var(--text-main);" onclick="sortTable('micro-table', 6, 'STR')">Status Metric</th>
+                                
+                                <th colspan="6" class="trend-header-group">Historical Coverage Trend Matrix (Last 6 Months)</th>
+                                <th colspan="6" class="trend-header-group">Historical FTE Allocation Velocity (Last 6 Months)</th>
+                                
+                                <th rowspan="2" style="width: 25%; border-bottom: 2px solid var(--text-main); cursor: default;">Actionable Operational Focus Context</th>
+                            </tr>
+                            <tr>
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 7, 'NUM')">M13</th>
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 8, 'NUM')">M14</th>
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 9, 'NUM')">M15</th>
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 10, 'NUM')">M16</th>
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 11, 'NUM')">M17</th>
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 12, 'NUM')">M18</th>
+                                
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 13, 'NUM')">M13</th>
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 14, 'NUM')">M14</th>
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 15, 'NUM')">M15</th>
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 16, 'NUM')">M16</th>
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 17, 'NUM')">M17</th>
+                                <th style="font-size:10px;" onclick="sortTable('micro-table', 18, 'NUM')">M18</th>
+                            </tr>
+                        </thead>
+                        <tbody id="micro-table-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span id="chart-main-title">18-Month Consolidated Portfolio Performance Dashboard</span>
+                <span id="chart-sub-meta" style="font-size: 11px; color: var(--text-muted); font-weight: normal; margin-left: 15px;"></span>
+            </div>
+            
+            <div class="charts-dashboard-grid">
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <strong style="text-transform: uppercase; font-size:11px; letter-spacing:0.3px;">1. Operational Capacity &amp; Utilization Line Analysis (k Volumes)</strong>
+                        <div class="chart-legend">
+                            <div class="legend-item"><div class="legend-dot" style="background-color: #6c757d; border:1px dashed #333;"></div> Grey Dash = Demand Forecast (FC)</div>
+                            <div class="legend-item"><div class="legend-dot" style="background-color: #2b9348;"></div> Colored Vector = Filled Capacity Run-rate (% Display = Active Utilization Coverage)</div>
+                        </div>
+                    </div>
+                    <div class="svg-chart-container">
+                        <svg id="svg-capacity-canvas" class="svg-canvas"></svg>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <strong style="text-transform: uppercase; font-size:11px; letter-spacing:0.3px;">2. Resource Allocation Velocity (Active Core Compliance FTE Staff Count)</strong>
+                        <div class="chart-legend">
+                            <div class="legend-item"><div class="legend-dot" style="background-color: #023e8a;"></div> Navy Blue Vector = Total Dedicated Team Headcount Size</div>
+                        </div>
+                    </div>
+                    <div class="svg-chart-container">
+                        <svg id="svg-fte-canvas" class="svg-canvas"></svg>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <strong style="text-transform: uppercase; font-size:11px; letter-spacing:0.3px;">3. Unit Cost Optimization Profile (Dynamic Cost Per Case File Progression)</strong>
+                        <div class="chart-legend">
+                            <div class="legend-item"><div class="legend-dot" style="background-color: #f77f00;"></div> Orange Vector = Dynamic Weighted Processing Unit Cost Curve</div>
+                        </div>
+                    </div>
+                    <div class="svg-chart-container">
+                        <svg id="svg-cost-canvas" class="svg-canvas"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const portfolioData = {
+            "EEA": {
+                "Germany": {
+                    demand: [60,61,63,64,66,68,70,72,73,75,76,78,80,82,83,85,86,88],
+                    capacity: [40,40,40,41,41,41,42,42,42,42,42,42,42,42,42,42,42,42],
+                    fteHistory: [41,41,41,42,42,42,43,43,43,43,44,44,44,44,45,45,45,45],
+                    costHistory: [4.60,4.62,4.65,4.68,4.70,4.72,4.75,4.76,4.78,4.80,4.82,4.82,4.82,4.82,4.82,4.82,4.82,4.82],
+                    cost: 4.82, fte: 45, type: "Manual Heavy / Regulatory Bottleneck Risk",
+                    action: "CRITICAL COMPLIANCE SQUEEZE: Stringent local documentation controls stall structural automation scale. Processing ceiling capped at 42k against 88k inbound forecast. Scaling plan allocates +15 FTE."
+                },
+                "Estonia": {
+                    demand: [50,51,53,54,56,58,60,61,63,65,66,68,70,71,72,72,72,72],
+                    capacity: [51,52,54,55,57,59,61,62,64,66,68,70,71,72,73,74,75,75],
+                    fteHistory: [26,26,26,27,27,27,28,28,28,28,28,28,28,28,28,28,28,28],
+                    costHistory: [1.45,1.40,1.36,1.32,1.30,1.28,1.26,1.25,1.24,1.22,1.21,1.20,1.20,1.20,1.20,1.20,1.20,1.20],
+                    cost: 1.20, fte: 28, type: "Automated Workflow System / Highly Scalable",
+                    action: "OPTIMAL RUN-RATE: State registry e-government database hooks handle the load seamlessly. Maintaining 104% operational buffer window. Capacity investment frozen; funds routed to deficit cells."
+                },
+                "France": {
+                    demand: [35,36,38,39,41,42,44,45,47,48,50,51,52,53,54,55,55,55],
+                    capacity: [32,34,35,37,38,40,41,43,44,44,45,45,46,47,48,48,48,48],
+                    fteHistory: [21,21,22,22,23,23,23,24,24,24,24,24,24,24,24,24,24,24],
+                    costHistory: [2.25,2.22,2.20,2.18,2.16,2.15,2.14,2.12,2.11,2.10,2.10,2.10,2.10,2.10,2.10,2.10,2.10,2.10],
+                    cost: 2.10, fte: 24, type: "Understaffed Regional Language Profile",
+                    action: "MODERATE OUTPACE: Local language validation parameters tracking slightly thin at 87% coverage. Cross-training South-European operations clusters to mitigate standard pipeline backlog."
+                }
+            },
+            "APAC": {
+                "Singapore": {
+                    demand: [65,66,68,70,72,74,76,78,80,81,83,84,85,86,87,88,88,88],
+                    capacity: [50,53,56,60,64,68,72,75,79,81,84,86,88,90,91,92,92,92],
+                    fteHistory: [18,17,16,15,15,14,13,13,12,12,12,12,12,12,12,12,12,12],
+                    costHistory: [1.05,0.98,0.90,0.82,0.75,0.68,0.60,0.54,0.48,0.44,0.40,0.38,0.36,0.35,0.35,0.35,0.35,0.35],
+                    cost: 0.35, fte: 12, type: "AI-Driven Hyper Scale Core",
+                    action: "AUTOMATION BENCHMARK CASE: Singpass verification module rollout systematically dropped local unit cost metrics down to €0.35 while reallocating human capital out of repetitive workflows."
+                },
+                "Australia": {
+                    demand: [40,42,43,45,47,49,50,52,54,56,58,60,61,63,64,65,65,65],
+                    capacity: [40,40,41,41,42,42,43,43,44,44,44,44,45,45,45,45,45,45],
+                    fteHistory: [23,24,24,25,25,25,26,26,26,26,26,26,26,26,26,26,26,26],
+                    costHistory: [2.60,2.65,2.70,2.75,2.78,2.80,2.82,2.85,2.88,2.90,2.90,2.90,2.90,2.90,2.90,2.90,2.90,2.90],
+                    cost: 2.90, fte: 26, type: "Manual Inefficiency Friction",
+                    action: "CAPACITY COMPRESSION: Manual audit checkpoints expanding, causing delivery metrics to trail volume inbound tracking. Local API integration currently scheduled for execution in next corporate half."
+                },
+                "Japan": {
+                    demand: [25,27,28,30,32,34,35,37,39,40,41,42,43,44,45,46,47,48],
+                    capacity: [28,30,31,33,35,37,38,40,42,44,46,48,50,51,52,52,52,52],
+                    fteHistory: [13,13,14,14,14,15,15,15,15,15,15,15,15,15,15,15,15,15],
+                    costHistory: [0.92,0.90,0.88,0.86,0.85,0.84,0.83,0.82,0.81,0.80,0.80,0.80,0.80,0.80,0.80,0.80,0.80,0.80],
+                    cost: 0.80, fte: 15, type: "Stable / Operational Buffer Squad",
+                    action: "STABLE HORIZON: Steady structural workflow execution delivers solid processing buffers (108%). Unit costs remain highly predictable with zero strategic remediation required."
+                }
+            },
+            "AMER": {
+                "USA": {
+                    demand: [60,62,65,68,70,73,75,78,80,83,85,87,89,91,93,94,95,95],
+                    capacity: [55,57,59,61,63,64,65,66,66,67,68,68,69,69,70,70,70,70],
+                    fteHistory: [46,47,48,49,50,50,51,51,52,52,52,52,52,52,52,52,52,52],
+                    costHistory: [1.85,1.88,1.90,1.92,1.94,1.95,1.95,1.95,1.95,1.95,1.95,1.95,1.95,1.95,1.95,1.95,1.95,1.95],
+                    cost: 1.95, fte: 52, type: "High Growth Customer Intake Axis",
+                    action: "SCALE GAP: Onboarding volume trends accelerating ahead of internal processing staff capacity thresholds (73% coverage). Interim strategy introduces temporary contractor units."
+                },
+                "Canada": {
+                    demand: [38,40,41,43,45,47,48,50,51,53,55,56,57,58,59,60,60,60],
+                    capacity: [40,42,43,45,46,48,49,51,52,54,56,57,58,59,60,61,62,62],
+                    fteHistory: [19,19,20,20,21,21,21,22,22,22,22,22,22,22,22,22,22,22],
+                    costHistory: [2.22,2.20,2.18,2.16,2.15,2.15,2.15,2.15,2.15,2.15,2.15,2.15,2.15,2.15,2.15,2.15,2.15,2.15],
+                    cost: 2.15, fte: 22, type: "Balanced Budget Baseline",
+                    action: "STABLE ALIGNMENT: Volumetric flows tracking symmetrically alongside baseline financial projections. Operational metrics require zero localized corporate intervention."
+                },
+                "Brazil": {
+                    demand: [20,22,25,27,30,32,34,36,37,39,40,41,42,43,44,45,45,45],
+                    capacity: [15,16,17,18,18,19,19,20,20,20,20,20,20,20,20,20,20,20],
+                    fteHistory: [13,14,14,15,15,15,16,16,16,16,16,16,16,16,16,16,16,16],
+                    costHistory: [3.15,3.20,3.30,3.35,3.40,3.40,3.40,3.40,3.40,3.40,3.40,3.40,3.40,3.40,3.40,3.40,3.40,3.40],
+                    cost: 3.40, fte: 16, type: "Severe Structural Deficit",
+                    action: "VOLUMETRIC SHOCK: Instant transaction market expansion outrun core human processing velocity. Medium term priority replaces manual steps with native structural database lookups."
+                }
+            }
+        };
+
+        let activeRegion = "ALL";
+        let activeStatus = "ALL";
+        let activeCountry = "NONE"; 
+        let sortDirections = {};
+
+        window.addEventListener('DOMContentLoaded', () => {
+            rebuildCountryOptions();
+            renderMacroTable();
+            renderMicroTable();
+            renderAllCharts();
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            document.getElementById(`btn-${tabId}`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            
+            if (tabId === "tab1") {
+                activeCountry = "NONE"; 
+            } else {
+                if (activeCountry === "NONE") activeCountry = "Germany"; 
+            }
+            
+            syncFreezePaneIndicator();
+            rebuildCountryOptions();
+            renderMicroTable();
+            renderAllCharts();
+        }
+
+        function syncFreezePaneIndicator() {
+            const labelEl = document.getElementById('freeze-pane-target-label');
+            if (activeCountry === "NONE") {
+                labelEl.innerText = `Global Portfolio / Cluster: ${activeRegion === "ALL" ? "All Global Portfolios" : activeRegion}`;
+            } else {
+                labelEl.innerText = `Country Deep-Dive Focus: ${activeCountry}`;
+            }
+        }
+
+        function rebuildCountryOptions() {
+            const select = document.getElementById('country-filter');
+            if (!select) return;
+            select.innerHTML = '';
+            
+            let optNone = document.createElement('option');
+            optNone.value = "NONE";
+            optNone.innerText = "Show Region Consolidated View";
+            if (activeCountry === "NONE") optNone.selected = true;
+            select.appendChild(optNone);
+
+            for (let r in portfolioData) {
+                if (activeRegion !== "ALL" && activeRegion !== r) continue;
+                for (let c in portfolioData[r]) {
+                    if (activeStatus !== "ALL") {
+                        const ratio = (portfolioData[r][c].capacity[17] / portfolioData[r][c].demand[17]) * 100;
+                        if (activeStatus === "DEFICIT" && ratio >= 85) continue;
+                        if (activeStatus === "OPTIMAL" && ratio < 85) continue;
+                    }
+                    let opt = document.createElement('option');
+                    opt.value = c;
+                    opt.innerText = `${c} (${r})`;
+                    if (c === activeCountry) opt.selected = true;
+                    select.appendChild(opt);
+                }
+            }
+        }
+
+        function updateFilters(type, value) {
+            if (type === 'REGION') activeRegion = value;
+            if (type === 'STATUS') activeStatus = value;
+            if (type === 'COUNTRY') activeCountry = value;
+
+            if (type === 'REGION' || type === 'STATUS') {
+                activeCountry = "NONE";
+            }
+
+            syncFreezePaneIndicator();
+            rebuildCountryOptions();
+            renderMicroTable();
+            renderAllCharts();
+        }
+
+        function getSoftHeatmapClass(pct) {
+            if (pct >= 100) return "hm-cell-green";
+            if (pct >= 90) return "hm-cell-lime";
+            if (pct >= 80) return "hm-cell-yellow";
+            if (pct >= 60) return "hm-cell-orange";
+            return "hm-cell-red";
+        }
+
+        function renderMacroTable() {
+            const tbody = document.getElementById('macro-table-body');
+            tbody.innerHTML = '';
+
+            let totalD = 0, totalC = 0, totalFTE = 0, totalWeightCost = 0;
+            let regionalTotals = {};
+
+            for (let r in portfolioData) {
+                regionalTotals[r] = { d: 0, c: 0, fte: 0, wc: 0 };
+                for (let c in portfolioData[r]) {
+                    let item = portfolioData[r][c];
+                    regionalTotals[r].d += item.demand[17];
+                    regionalTotals[r].c += item.capacity[17];
+                    regionalTotals[r].fte += item.fte;
+                    regionalTotals[r].wc += (item.cost * item.demand[17]);
+                }
+                totalD += regionalTotals[r].d;
+                totalC += regionalTotals[r].c;
+                totalFTE += regionalTotals[r].fte;
+                totalWeightCost += regionalTotals[r].wc;
+            }
+
+            let gRatio = Math.round((totalC / totalD) * 100);
+            let gAvgCost = totalWeightCost / totalD;
+            
+            let trG = document.createElement('tr');
+            trG.className = 'row-consolidated';
+            trG.innerHTML = `
+                <td class="sticky-col">🌐 GLOBAL TOTAL PORTFOLIO</td>
+                <td data-val="${totalD}">${totalD}k</td>
+                <td data-val="${totalC}">${totalC}k</td>
+                <td data-val="${gRatio}" class="${getSoftHeatmapClass(gRatio)}">${gRatio}%</td>
+                <td data-val="${totalFTE}">${totalFTE} FTE</td>
+                <td data-val="${gAvgCost}">&euro;${gAvgCost.toFixed(2)}</td>
+                <td><span class="badge summary">Global Agg</span></td>
+            `;
+            tbody.appendChild(trG);
+
+            for (let r in regionalTotals) {
+                let rRatio = Math.round((regionalTotals[r].c / regionalTotals[r].d) * 100);
+                let rAvgCost = regionalTotals[r].wc / regionalTotals[r].d;
+                let trR = document.createElement('tr');
+                trR.className = 'row-consolidated';
+                trR.innerHTML = `
+                    <td class="sticky-col">📁 ${r} REGIONAL SUMMARY</td>
+                    <td data-val="${regionalTotals[r].d}">${regionalTotals[r].d}k</td>
+                    <td data-val="${regionalTotals[r].c}">${regionalTotals[r].c}k</td>
+                    <td data-val="${rRatio}" class="${getSoftHeatmapClass(rRatio)}">${rRatio}%</td>
+                    <td data-val="${regionalTotals[r].fte}">${regionalTotals[r].fte} FTE</td>
+                    <td data-val="${rAvgCost}">&euro;${rAvgCost.toFixed(2)}</td>
+                    <td><span class="badge summary">Cluster Agg</span></td>
+                `;
+                tbody.appendChild(trR);
+            }
+        }
+
+        function renderMicroTable() {
+            const tbody = document.getElementById('micro-table-body');
+            tbody.innerHTML = '';
+
+            for (let r in portfolioData) {
+                if (activeRegion !== "ALL" && activeRegion !== r) continue;
+
+                for (let c in portfolioData[r]) {
+                    let countryObj = portfolioData[r][c];
+                    let dM18 = countryObj.demand[17];
+                    let cM18 = countryObj.capacity[17];
+                    let ratio = Math.round((cM18 / dM18) * 100);
+
+                    let isDeficit = ratio < 85;
+                    if (activeStatus === "DEFICIT" && !isDeficit) continue;
+                    if (activeStatus === "OPTIMAL" && isDeficit) continue;
+
+                    let badgeStyle = isDeficit ? "badge critical" : "badge optimal";
+                    let labelStatus = isDeficit ? "Deficit" : "Optimal";
+
+                    // Viimase 6 kuu katvuse ja ressursside arvutamine (M13 - M18)
+                    let coverageHistoryHTML = '';
+                    for(let i = 12; i < 18; i++) {
+                        let monthlyPct = Math.round((countryObj.capacity[i] / countryObj.demand[i]) * 100);
+                        coverageHistoryHTML += `<td data-val="${monthlyPct}" class="${getSoftHeatmapClass(monthlyPct)}">${monthlyPct}%</td>`;
+                    }
+
+                    let fteHistoryHTML = '';
+                    let fteL6M = countryObj.fteHistory.slice(12, 18);
+                    fteL6M.forEach(val => {
+                        fteHistoryHTML += `<td data-val="${val}">${val}</td>`;
+                    });
+
+                    let tr = document.createElement('tr');
+                    tr.className = 'row-clickable';
+                    
+                    if (c === activeCountry) {
+                        tr.style.backgroundColor = "var(--wise-green-dim)";
+                    }
+
+                    tr.onclick = () => {
+                        activeCountry = c;
+                        document.getElementById('country-filter').value = c;
+                        syncFreezePaneIndicator();
+                        renderMicroTable();
+                        renderAllCharts();
+                    };
+
+                    tr.innerHTML = `
+                        <td class="sticky-col" style="${c === activeCountry ? 'background-color: #f1fbe9;' : ''}">
+                            <strong>${c}</strong> <span style="font-size:10px; color:var(--text-muted);">(${r})</span>
+                        </td>
+                        <td data-val="${dM18}">${dM18}k</td>
+                        <td data-val="${cM18}">${cM18}k</td>
+                        <td data-val="${ratio}" class="${getSoftHeatmapClass(ratio)}">${ratio}%</td>
+                        <td data-val="${countryObj.fte}">${countryObj.fte} FTE</td>
+                        <td data-val="${countryObj.cost}">&euro;${countryObj.cost.toFixed(2)}</td>
+                        <td><span class="${badgeStyle}">${labelStatus}</span></td>
+                        
+                        ${coverageHistoryHTML}
+                        ${fteHistoryHTML}
+                        
+                        <td style="font-size:11px; line-height:1.3; white-space: normal; cursor:default;" onclick="event.stopPropagation();">${countryObj.action}</td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            }
+        }
+
+        function sortTable(tableId, colIndex, type) {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            const sortKey = `${tableId}-${colIndex}`;
+            sortDirections[sortKey] = !sortDirections[sortKey];
+            const ascending = sortDirections[sortKey];
+
+            const staticRows = rows.filter(r => r.classList.contains('row-consolidated'));
+            const dataRows = rows.filter(r => !r.classList.contains('row-consolidated'));
+
+            dataRows.sort((rowA, rowB) => {
+                let cellA = rowA.children[colIndex];
+                let cellB = rowB.children[colIndex];
+                
+                let valA = cellA.hasAttribute('data-val') ? parseFloat(cellA.getAttribute('data-val')) : cellA.innerText.trim();
+                let valB = cellB.hasAttribute('data-val') ? parseFloat(cellB.getAttribute('data-val')) : cellB.innerText.trim();
+
+                if (type === 'STR') {
+                    return ascending ? String(valA).localeCompare(String(valB)) : String(valB).localeCompare(String(valA));
+                } else {
+                    return ascending ? (valA - valB) : (valB - valA);
+                }
+            });
+
+            tbody.innerHTML = '';
+            staticRows.forEach(r => tbody.appendChild(r));
+            dataRows.forEach(r => tbody.appendChild(r));
+        }
+
+        function renderAllCharts() {
+            let timelineDemand = Array(18).fill(0);
+            let timelineCapacity = Array(18).fill(0);
+            let timelineFte = Array(18).fill(0);
+            let timelineCost = Array(18).fill(0);
+            
+            let labelTitle = "";
+            let labelMeta = "";
+            let entityCount = 0;
+
+            for (let r in portfolioData) {
+                if (activeRegion !== "ALL" && activeRegion !== r) continue;
+                for (let c in portfolioData[r]) {
+                    if (activeCountry !== "NONE" && c !== activeCountry) continue;
+                    let item = portfolioData[r][c];
+                    entityCount++;
+
+                    for (let i = 0; i < 18; i++) {
+                        timelineDemand[i] += item.demand[i];
+                        timelineCapacity[i] += item.capacity[i];
+                        timelineFte[i] += item.fteHistory[i];
+                        timelineCost[i] += item.costHistory[i];
+                    }
+                }
+            }
+
+            if (activeCountry === "NONE") {
+                labelTitle = `Consolidated Cluster Profile: ${activeRegion === "ALL" ? "All Global Portfolios" : activeRegion + " Region"}`;
+                labelMeta = "Summed operational indicators parsed across active baseline segments";
+                for (let i = 0; i < 18; i++) timelineCost[i] = timelineCost[i] / (entityCount || 1);
+            } else {
+                let match = null;
+                for (let r in portfolioData) { if (portfolioData[r][activeCountry]) { match = portfolioData[r][activeCountry]; break; } }
+                labelTitle = `Deep-Dive Analysis Profile: ${activeCountry}`;
+                labelMeta = `Operational Core Model Frame: ${match ? match.type : ''}`;
+            }
+
+            document.getElementById('chart-main-title').innerText = labelTitle;
+            document.getElementById('chart-sub-meta').innerText = labelMeta;
+
+            drawStrategicLineChart("svg-capacity-canvas", timelineDemand, timelineCapacity, "CAPACITY", "#2b9348");
+            drawStrategicLineChart("svg-fte-canvas", timelineFte, null, "FTE", "#023e8a");
+            drawStrategicLineChart("svg-cost-canvas", timelineCost, null, "CURRENCY", "#f77f00");
+        }
+
+        function drawStrategicLineChart(canvasId, dataset1, dataset2, mode, primaryColor) {
+            const svg = document.getElementById(canvasId);
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            const width = 1150;
+            const height = 240;
+            const paddingLeft = 55;
+            const paddingRight = 45;
+            const paddingTop = 30;
+            const paddingBottom = 40;
+
+            const chartWidth = width - paddingLeft - paddingRight;
+            const chartHeight = height - paddingTop - paddingBottom;
+
+            let combined = [...dataset1];
+            if (dataset2) combined = [...combined, ...dataset2];
+            
+            let rawMax = Math.max(...combined);
+            let rawMin = Math.min(...combined);
+            let maxVal, minVal;
+
+            if (mode === "CURRENCY") {
+                minVal = Math.max(0, Math.floor(rawMin * 2) / 2 - 0.5); 
+                maxVal = Math.ceil(rawMax * 2) / 2 + 0.5;
+            } else if (mode === "FTE") {
+                minVal = Math.max(0, Math.floor(rawMin / 5) * 5 - 5);
+                maxVal = Math.ceil(rawMax / 5) * 5 + 5;
+            } else {
+                minVal = 0;
+                maxVal = Math.ceil(rawMax * 1.15 / 10) * 10;
+            }
+
+            const stepX = chartWidth / 17;
+
+            for (let i = 0; i <= 4; i++) {
+                let ratioFraction = i / 4;
+                let targetValue = maxVal - ((maxVal - minVal) * ratioFraction);
+                let targetY = paddingTop + (chartHeight * ratioFraction);
+                let labelText = mode === "CURRENCY" ? "&euro;" + targetValue.toFixed(2) : (mode === "CAPACITY" ? Math.round(targetValue) + "k" : Math.round(targetValue));
+
+                svg.innerHTML += `<line x1="${paddingLeft}" y1="${targetY}" x2="${width - paddingRight}" y2="${targetY}" class="grid-line" />`;
+                svg.innerHTML += `<text x="${paddingLeft - 10}" y="${targetY + 4}" text-anchor="end" class="axis-text">${labelText}</text>`;
+            }
+
+            let coords1 = data => data.map((val, idx) => ({ x: paddingLeft + (idx * stepX), y: paddingTop + chartHeight - ((val - minVal) / (maxVal - minVal) * chartHeight), val }));
+            let pts1 = coords1(dataset1);
+
+            pts1.forEach((pt, idx) => {
+                const chronologicalTimeline = ['M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9', 'M10', 'M11', 'M12', 'M13', 'M14', 'M15', 'M16', 'M17', 'M18'];
+                svg.innerHTML += `<line x1="${pt.x}" y1="${paddingTop}" x2="${pt.x}" y2="${paddingTop + chartHeight}" class="grid-line" />`;
+                svg.innerHTML += `<text x="${pt.x}" y="${height - 12}" text-anchor="middle" class="axis-text">${chronologicalTimeline[idx]}</text>`;
+            });
+
+            if (mode === "CAPACITY" && dataset2) {
+                let pts2 = coords1(dataset2);
+                svg.innerHTML += `<path d="M ${pts1[0].x} ${pts1[0].y} ` + pts1.slice(1).map(p => `L ${p.x} ${p.y}`).join(' ') + `" class="line-demand" />`;
+                svg.innerHTML += `<path d="M ${pts2[0].x} ${pts2[0].y} ` + pts2.slice(1).map(p => `L ${p.x} ${p.y}`).join(' ') + `" class="line-capacity ${dataset2[17] < dataset1[17] ? 'deficit' : ''}" />`;
+
+                pts2.forEach((pt, idx) => {
+                    if (idx % 2 === 0 || idx === 17) {
+                        let utilizationPct = Math.round((dataset2[idx] / dataset1[idx]) * 100);
+                        svg.innerHTML += `<circle cx="${pt.x}" cy="${pt.y}" r="5" fill="${dataset2[idx] < dataset1[idx] ? 'var(--risk-red)' : '#2b9348'}" class="chart-dot" />`;
+                        svg.innerHTML += `<text x="${pt.x}" y="${pt.y - 22}" text-anchor="middle" class="node-text" fill="${dataset2[idx] < dataset1[idx] ? 'var(--risk-red)' : '#2b9348'}">${pt.val}k</text>`;
+                        svg.innerHTML += `<text x="${pt.x}" y="${pt.y - 10}" text-anchor="middle" class="node-text pct-label">(${utilizationPct}%)</text>`;
+                    }
+                });
+            } else {
+                svg.innerHTML += `<path d="M ${pts1[0].x} ${pts1[0].y} ` + pts1.slice(1).map(p => `L ${p.x} ${p.y}`).join(' ') + `" stroke="${primaryColor}" stroke-width="3.5" fill="none" />`;
+                pts1.forEach((pt, idx) => {
+                    if (idx % 2 === 0 || idx === 17) {
+                        svg.innerHTML += `<circle cx="${pt.x}" cy="${pt.y}" r="4" fill="${primaryColor}" class="chart-dot" />`;
+                        svg.innerHTML += `<text x="${pt.x}" y="${pt.y - 10}" text-anchor="middle" class="node-text">${mode === "CURRENCY" ? "&euro;" + pt.val.toFixed(2) : Math.round(pt.val) + " FTE"}</text>`;
+                    }
+                });
+            }
+            svg.innerHTML += `<line x1="${paddingLeft}" y1="${paddingTop + chartHeight}" x2="${width - paddingRight}" y2="${paddingTop + chartHeight}" class="axis-line" />`;
+        }
+    </script>
+</body>
+</html>
